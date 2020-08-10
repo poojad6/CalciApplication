@@ -19,7 +19,7 @@ pipeline {
 			steps {
 				echo "Testing Code"
 				sh 'docker pull alpine/flake8'
-				sh 'docker run --rm -v $(pwd):/apps alpine/flake8:3.5.0 --output-file -flake8-output.xml calculator_new.py'
+				sh 'docker run --rm -v ${pwd}:/apps alpine/flake8:3.5.0 --output-file -flake8-output.xml calculator_new.py'
 			}
 			post{
 				always {
@@ -43,13 +43,13 @@ pipeline {
 			steps {
 				dir(path: env.BUILD_ID) {
 					unstash(name: 'compiled_results')
-					sh "docker run --rm -v $(VOLUME) $(IMAGE) 'pyinstaller -F calculator_new.py'"
+					sh "docker run --rm -v ${VOLUME} ${IMAGE} 'pyinstaller -F calculator_new.py'"
 				}
 			}
 			post {
 				success {
 					archiveArtifacts "${env.BUILD_ID}/dist/calculator_new.exe"
-					sh "docker run --rm -v $(VOLUME) $(IMAGE) 'rm -rf build dist'"
+					sh "docker run --rm -v ${VOLUME} ${IMAGE} 'rm -rf build dist'"
 				}
 			}
 		}
